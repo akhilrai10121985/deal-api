@@ -27,35 +27,38 @@ public class ProcessOrderVisitorImpl implements ProcessOrderVisitor {
 
     @Override
     public void visit(Buy buyDeal) {
-        log.info("Process buy order");
+        log.info("Processing buy order {}", buyDeal);
         // create entry in order table
         populateOrder(buyDeal.getMemberCode(), DealType.BUY, buyDeal.getUnits(), buyDeal.getInFund(), null);
+        log.info("Buy order captured in database {}", buyDeal);
         // increase units in InFund
         increaseHoldings(buyDeal.getMemberCode(), buyDeal.getUnits(), buyDeal.getInFund());
+        log.info("Member holdings increased, buy order processed {}", buyDeal);
     }
 
     @Override
     public void visit(Sell sellDeal) {
-        log.info("Process sell order");
+        log.info("Processing sell order");
         // create entry in order table
         populateOrder(sellDeal.getMemberCode(), DealType.SELL, sellDeal.getUnits(), null, sellDeal.getOutFund());
-
+        log.info("Sell order captured in database {}", sellDeal);
         // reduce holdings in outFund
         reduceHoldings(sellDeal.getMemberCode(), sellDeal.getUnits(), sellDeal.getOutFund());
+        log.info("Member holdings reduced, sell order processed {}", sellDeal);
     }
 
     @Override
     public void visit(Switch switchDeal) {
-        log.info("Process switch order");
+        log.info("Processing switch order");
         // populate order in order table
         populateOrder(switchDeal.getMemberCode(), DealType.SWITCH, switchDeal.getUnits(), switchDeal.getInFund(), switchDeal.getOutFund());
-
+        log.info("Switch order captured in database {}", switchDeal);
         // reduce holdings in outFund
         reduceHoldings(switchDeal.getMemberCode(), switchDeal.getUnits(), switchDeal.getOutFund());
-
+        log.info("Member holdings reduced in out fund {}", switchDeal);
         // increase units in InFund
         increaseHoldings(switchDeal.getMemberCode(), switchDeal.getUnits(), switchDeal.getInFund());
-
+        log.info("Member holdings increased in in fund, switch order processed {}", switchDeal);
     }
 
     private void increaseHoldings(String memberCode, double units, String inFund) {

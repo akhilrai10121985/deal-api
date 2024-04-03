@@ -16,8 +16,8 @@ public class DealOrderListener {
 
     @JmsListener(destination = "${deal.queue}", containerFactory = "myFactory")
     public void receiveMessage(Deal deal) {
-        System.out.println("Received <" + deal + ">");
+        log.info("Received deal message {}", deal);
         deal.accept(processOrderVisitor);
-
+        log.info("Message processed ok");
     }
 }
